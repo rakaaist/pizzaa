@@ -1,0 +1,263 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;1,100&display=swap');
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background-color: silver;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+main {
+    padding-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+/*
+  # Form
+*/
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: 50px auto 0;
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: silver;
+}
+
+input, textarea {
+    width: 250px;
+    padding: 5px;
+    margin: 10px auto 0;
+    text-align: left;
+}
+
+button {
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px 5px;
+}
+
+input, button, textarea {
+    border-radius: 10px;
+    outline: none;
+    border: 1px solid #383b40;
+}
+
+label {
+    margin: 10px 0;
+}
+
+.error {
+    color: darkred;
+    font-size: 12px;
+}
+
+.btn:hover {
+    background-color: gray;
+}
+
+/*
+  # Navigation
+*/
+
+header {
+    background-color: #383b40;
+    margin: 0;
+    padding: 20px;
+    /*position: fixed;*/
+    top: 0;
+    width: 100vw;
+}
+
+ul {
+    display: flex;
+    margin: 0;
+    justify-content: flex-end;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+    letter-spacing: 3px;
+    margin-left: 20px;
+}
+
+main, nav {
+    width: 80%;
+    margin: 0 auto;
+}
+
+a:hover {
+    color: black;
+}
+
+/*
+  # Index
+*/
+
+#pizza-grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+    align-content: center;
+    justify-items: center;
+    margin: 0 auto;
+}
+
+#pizza-grid-container .data-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid gray;
+}
+
+.item {
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    height: 400px;
+}
+
+img {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    transition: 0.5s ease-in-out;
+    border-radius: 100%;
+    margin: 15px;
+}
+
+img:hover {
+    transform: scale(1.1);
+}
+
+/*
+  # Modal
+*/
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: orangered;
+}
+
+.modal .close {
+    color: white;
+    font-size: 50px;
+    cursor:pointer;
+}
+
+
+/*
+  # Table
+*/
+table {
+    border: 2px solid #A40808;
+    background-color: #EEE7DB;
+    width: 60%;
+    text-align: center;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+table td, table th {
+    border: 1px solid #AAAAAA;
+    padding: 3px 2px;
+}
+table tbody td {
+    font-size: 13px;
+}
+table tr:nth-child(even) {
+    background: #F5C8BF;
+}
+table thead {
+    background: #A40808;
+}
+table thead th {
+    font-size: 19px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-align: center;
+    border-left: 2px solid #A40808;
+}
+table thead th:first-child {
+    border-left: none;
+}
+table tfoot {
+    font-size: 13px;
+    font-weight: bold;
+    color: #FFFFFF;
+    background: #A40808;
+}
+table tfoot td {
+    font-size: 13px;
+}
+table tfoot {
+    text-align: right;
+}
+table tfoot a{
+    display: inline-block;
+    background: #FFFFFF;
+    color: #A40808;
+    padding: 2px 8px;
+    border-radius: 5px;
+}
+
+
+
+
+
+/*.form-delete {*/
+/*    padding: 0;*/
+/*    margin: 0 auto;*/
+/*    max-width: 80px;*/
+/*    border: none;*/
+/*}*/
+
+/*.btn-delete {*/
+/*    max-width: 80px;*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    border: none;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.pizza-photo {*/
+/*    width: 100px;*/
+/*    height: 100px;*/
+/*}*/
+
+/*.menu {*/
+/*    display: grid;*/
+/*    grid-template-columns: repeat(4, 1fr);*/
+/*    grid-gap: 20px;*/
+/*}*/
