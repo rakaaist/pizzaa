@@ -24,7 +24,8 @@ class OrdersController extends AdminController
     {
         parent::__construct();
         $this->page = new BasePage([
-            'title' => 'Orders'
+            'title' => 'Orders',
+            'js' => ROOT . 'public_html/media/js/admin/orders.js'
         ]);
         $this->form = new OrderStatusForm();
     }

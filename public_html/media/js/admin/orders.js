@@ -1,12 +1,12 @@
 'use strict';
 
 const endpoints = {
-    get: 'api/pizza/get',
-    create: 'api/pizza/create',
-    edit: 'api/pizza/edit',
-    update: 'api/pizza/update',
-    delete: 'api/pizza/delete',
-    order: 'api/users/order/create'
+    get: 'api/admin/orders/get',
+    // create: 'api/pizza/create',
+    // edit: 'api/pizza/edit',
+    // update: 'api/pizza/update',
+    // delete: 'api/pizza/delete',
+    // order: 'api/users/order/create'
 };
 
 /**
@@ -14,11 +14,10 @@ const endpoints = {
  */
 const selectors = {
     forms: {
-        create: 'pizza-create-form',
-        update: 'pizza-update-form'
+        update: 'order-update-form'
     },
     modal: 'update-modal',
-    grid: 'pizza-grid-container'
+    table: 'order-table'
 }
 
 /**
@@ -57,39 +56,6 @@ function api(url, formData, success, fail) {
  * Object forms
  */
 const forms = {
-    /**
-     * Create Form
-     */
-    create: {
-        init: function () {
-            if (this.getElement()) {
-                this.getElement().addEventListener('submit', this.onSubmitListener);
-                return true;
-            }
-
-            return false;
-        },
-        getElement: function () {
-            return document.getElementById(selectors.forms.create);
-        },
-        onSubmitListener: function (e) {
-            e.preventDefault();
-            let formData = new FormData(e.target);
-            formData.append('action', 'create');
-            api(endpoints.create, formData, forms.create.success, forms.create.fail);
-        },
-        success: function (data) {
-            const element = forms.create.getElement();
-
-            grid.item.append(data);
-            forms.ui.errors.hide(element);
-            forms.ui.clear(element);
-            forms.ui.flash.class(element, 'success');
-        },
-        fail: function (errors) {
-            forms.ui.errors.show(forms.create.getElement(), errors);
-        }
-    },
     /**
      * Update Form
      */
@@ -243,16 +209,16 @@ const forms = {
 /**
  * Table-related functionality
  */
-const grid = {
+const table = {
     getElement: function () {
-        return document.getElementById(selectors.grid);
+        return document.getElementById(selectors.table);
     },
     init: function () {
         if (this.getElement()) {
             this.data.load();
 
             Object.keys(this.buttons).forEach(buttonId => {
-                let success = grid.buttons[buttonId].init();
+                let success = table.buttons[buttonId].init();
                 console.log('Setting up button listeners "' + buttonId + '": ' + (success ? 'PASS' : 'FAIL'));
             });
 
@@ -266,16 +232,16 @@ const grid = {
      */
     data: {
         /**
-         * Loads data and populates grid from API
+         * Loads data and populates table from API
          * @returns {undefined}
          */
         load: function () {
-            console.log('Grid: Calling API to get data...');
+            console.log('Table: Calling API to get data...');
             api(endpoints.get, null, this.success, this.fail);
         },
         success: function (data) {
             Object.keys(data).forEach(i => {
-                grid.item.append(data[i]);
+                table.row.append(data[i]);
             });
         },
         fail: function (errors) {
@@ -285,7 +251,7 @@ const grid = {
     /**
      * Operations with items
      */
-    item: {
+    row: {
         /**
          * Builds item element from data
          *
@@ -293,21 +259,21 @@ const grid = {
          * @returns {Element}
          */
         build: function (data) {
-            const item = document.createElement('div');
+            const row = document.createElement('tr');
 
             if (data.id == null) {
                 throw Error('JS can`t build the item, because API data doesn`t contain its ID. Check API controller!');
             }
 
-            item.setAttribute('data-id', data.id);
-            item.className = 'data-item';
+            row.setAttribute('data-id', data.id);
+            row.className = 'data-item';
 
             Object.keys(data).forEach(data_id => {
                 switch (data_id) {
-                    case 'image':
-                        let img = document.createElement('img');
-                        img.src = data[data_id];
-                        item.append(img);
+                    case 'form':
+                        let form = document.createElement('form');
+                        form.src = data[data_id];
+                        row.append(form);
                         break;
 
                     case 'buttons':
@@ -316,7 +282,7 @@ const grid = {
                             let btn = document.createElement('button');
                             btn.innerHTML = buttons[button_id];
                             btn.className = button_id;
-                            item.append(btn);
+                            row.append(btn);
                         });
                         break;
 
@@ -324,39 +290,39 @@ const grid = {
                         let span = document.createElement('span');
                         span.innerHTML = data[data_id];
                         span.className = data_id;
-                        item.append(span);
+                        row.append(span);
                 }
             });
 
-            return item;
+            return row;
         },
         /**
-         * Appends item to grid from data
+         * Appends row to table from data
          *
          * @param {Object} data
          */
         append: function (data) {
-            console.log('Grid: Creating item in grid container from ', data);
-            grid.getElement().append(this.build(data));
+            console.log('Table: Creating row in table container from ', data);
+            table.getElement().append(this.build(data));
         },
         /**
-         * Updates existing item in grid from data
+         * Updates existing row in table from data
          * Row is selected via "id" index in data
          *
          * @param {Object} data
          */
         update: function (data) {
-            let item = grid.getElement().querySelector('.data-item[data-id="' + data.id + '"]');
-            item.replaceWith(this.build(data));
+            let row = grid.getElement().querySelector('.data-item[data-id="' + data.id + '"]');
+            row.replaceWith(this.build(data));
             //row = this.build(data);
         },
         /**
-         * Deletes existing item
+         * Deletes existing row
          * @param {Integer} id
          */
         delete: function (id) {
-            const item = grid.getElement().querySelector('.data-item[data-id="' + id + '"]');
-            item.remove();
+            const row = table.getElement().querySelector('.data-item[data-id="' + id + '"]');
+            row.remove();
         }
     },
     // Buttons are declared on whole grid, not on each item individually, so
@@ -364,8 +330,8 @@ const grid = {
     buttons: {
         delete: {
             init: function () {
-                if (grid.getElement()) {
-                    grid.getElement().addEventListener('click', this.onClickListener);
+                if (table.getElement()) {
+                    table.getElement().addEventListener('click', this.onClickListener);
                     return true;
                 }
 
@@ -378,15 +344,15 @@ const grid = {
                     let formData = new FormData();
 
                     // Find container of the button, which has ID
-                    let item = e.target.closest('.data-item');
-                    console.log('Delete button clicked on', item);
+                    let row = e.target.closest('.data-item');
+                    console.log('Delete button clicked on', row);
 
-                    formData.append('id', item.getAttribute('data-id'));
-                    api(endpoints.delete, formData, grid.buttons.delete.success, grid.buttons.delete.fail);
+                    formData.append('id', row.getAttribute('data-id'));
+                    api(endpoints.delete, formData, table.buttons.delete.success, table.buttons.delete.fail);
                 }
             },
             success: function (data) {
-                grid.item.delete(data.id);
+                table.row.delete(data.id);
             },
             fail: function (errors) {
                 alert(errors[0]);
@@ -394,8 +360,8 @@ const grid = {
         },
         edit: {
             init: function () {
-                if (grid.getElement()) {
-                    grid.getElement().addEventListener('click', this.onClickListener);
+                if (table.getElement()) {
+                    table.getElement().addEventListener('click', this.onClickListener);
                     return true;
                 }
 
@@ -405,11 +371,11 @@ const grid = {
                 if (e.target.className === 'edit') {
                     let formData = new FormData();
 
-                    let item = e.target.closest('.data-item');
-                    console.log('Edit button clicked on', item);
+                    let row = e.target.closest('.data-item');
+                    console.log('Edit button clicked on', row);
 
-                    formData.append('id', item.getAttribute('data-id'));
-                    api(endpoints.edit, formData, grid.buttons.edit.success, grid.buttons.edit.fail);
+                    formData.append('id', row.getAttribute('data-id'));
+                    api(endpoints.edit, formData, table.buttons.edit.success, table.buttons.edit.fail);
                 }
             },
             success: function (api_data) {
@@ -422,8 +388,8 @@ const grid = {
         },
         order: {
             init: function () {
-                if (grid.getElement()) {
-                    grid.getElement().addEventListener('click', this.onClickListener);
+                if (table.getElement()) {
+                    table.getElement().addEventListener('click', this.onClickListener);
                     return true;
                 }
 
