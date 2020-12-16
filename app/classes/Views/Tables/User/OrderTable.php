@@ -21,6 +21,7 @@ class OrderTable extends Table
             $result = "{$days}d {$hours}:{$minutes} H";
             $row['timestamp'] = $result;
 
+            unset($row['user_name']);
             unset($row['email']);
         }
 

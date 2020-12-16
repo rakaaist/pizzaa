@@ -6,7 +6,10 @@ use App\App;
 use App\Controllers\Base\AdminController;
 use App\Views\BasePage;
 use App\Views\Forms\Admin\Order\OrderStatusForm;
+use App\Views\Forms\Admin\Order\OrderUpdateForm;
 use App\Views\Tables\Admin\OrdersTable;
+use Core\View;
+use Core\Views\Table;
 
 /**
  * Class AdminOrders
@@ -18,35 +21,46 @@ use App\Views\Tables\Admin\OrdersTable;
 class OrdersController extends AdminController
 {
     protected BasePage $page;
-    protected OrderStatusForm $form;
 
     public function __construct()
     {
         parent::__construct();
         $this->page = new BasePage([
             'title' => 'Orders',
-            'js' => ROOT . 'public_html/media/js/admin/orders.js'
+            'js' => ['/media/js/admin/orders.js']
+
         ]);
-        $this->form = new OrderStatusForm();
     }
 
     public function index()
     {
         $rows = App::$db->getRowsWhere('orders');
+//
+//        if ($this->form->validate()) {
+//            $clean_inputs = $this->form->values();
+//
+//            foreach ($rows as $id => $row) {
+//                if ($clean_inputs['id'] == $id) {
+//                    $row['status'] = $clean_inputs['status'];
+//                    App::$db->updateRow('orders', $id, $row);
+//                }
+//            }
+//        }
+        $forms = [
+            'update' => (new OrderUpdateForm())->render()
+        ];
 
-        if ($this->form->validate()) {
-            $clean_inputs = $this->form->values();
-
-            foreach ($rows as $id => $row) {
-                if ($clean_inputs['row_id'] == $id) {
-                    $row['status'] = $clean_inputs['status'];
-                    App::$db->updateRow('orders', $id, $row);
-                }
-            }
-        }
-
-        $table = new OrdersTable();
-        $this->page->setContent($table->render());
+        $table = new View([
+            'headers' => [
+                'ID',
+                'Status',
+                'Pizza name',
+                'Time Ago',
+                'Status edit'
+            ],
+            'forms' => $forms ?? []
+        ]);
+        $this->page->setContent($table->render(ROOT . '/app/templates/content/table.tpl.php'));
         return $this->page->render();
     }
 }

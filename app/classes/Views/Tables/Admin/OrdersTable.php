@@ -4,6 +4,7 @@ namespace App\Views\Tables\Admin;
 
 use App\App;
 use App\Views\Forms\Admin\Order\OrderStatusForm;
+use Core\Views\BaseTable;
 use Core\Views\Table;
 
 class OrdersTable extends Table
@@ -36,16 +37,16 @@ class OrdersTable extends Table
             unset($row['email'], $row['status']);
         }
 
-        parent::__construct([
-            'headers' => [
-                'ID',
-                'Pizza Name',
-                'Time Ago',
-                'User Name',
-                'Status'
-            ],
-            'rows' => $rows
-        ]);
+//        parent::__construct([
+//            'headers' => [
+//                'ID',
+//                'Pizza Name',
+//                'Time Ago',
+//                'User Name',
+//                'Status'
+//            ],
+//            'rows' => $rows
+//        ]);
     }
 
 }

@@ -1,51 +1,33 @@
-<div id="order-table">
-    <table>
-        <thead>
+<table class="table"">
+    <tr>
+        <?php foreach ($data['headers'] as $header): ?>
+            <th><?php print $header; ?></th>
+        <?php endforeach; ?>
+    </tr>
+    <?php foreach ($data['rows'] as $row): ?>
         <tr>
-            <th>Id</th>
-            <th>User Name</th>
-            <th>Pizza Name</th>
-            <th>Tme ago</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <?php foreach ($row as $col): ?>
+                <td><?php print $col; ?></td>
+            <?php endforeach; ?>
         </tr>
-        </thead>
-        <tbody>
-<!--        Rows are dynamically populated-->
-        </tbody>
-    </table>
-</div>
+    <?php endforeach; ?>
+</table>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--<table class="table">-->
-<!--    <tr>-->
-<!--        --><?php //foreach ($data['headers'] as $header): ?>
-<!--            <th>--><?php //print $header; ?><!--</th>-->
-<!--        --><?php //endforeach; ?>
-<!--    </tr>-->
-<!--    --><?php //foreach ($data['rows'] as $row): ?>
+<!--<div id="order-table">-->
+<!--    <table>-->
+<!--        <thead>-->
 <!--        <tr>-->
-<!--            --><?php //foreach ($row as $col): ?>
-<!--                <td>--><?php //print $col; ?><!--</td>-->
-<!--            --><?php //endforeach; ?>
+<!--            <th>Id</th>-->
+<!--            <th>User Name</th>-->
+<!--            <th>Pizza Name</th>-->
+<!--            <th>Tme ago</th>-->
+<!--            <th>Status</th>-->
+<!--            <th>Actions</th>-->
 <!--        </tr>-->
-<!--    --><?php //endforeach; ?>
-<!--</table>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--                Rows are dynamically populated-->
+<!--        </tbody>-->
+<!--    </table>-->
+<!--</div>-->

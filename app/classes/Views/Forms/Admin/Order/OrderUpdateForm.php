@@ -4,7 +4,7 @@
 namespace App\Views\Forms\Admin\Order;
 
 
-class OrderUpdateForm extends OrderStatusForm
+class OrderUpdateForm extends OrderBaseForm
 {
     public function __construct()
     {

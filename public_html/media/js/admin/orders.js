@@ -1,12 +1,10 @@
 'use strict';
 
 const endpoints = {
-    get: 'api/admin/orders/get',
-    // create: 'api/pizza/create',
-    // edit: 'api/pizza/edit',
-    // update: 'api/pizza/update',
-    // delete: 'api/pizza/delete',
-    // order: 'api/users/order/create'
+    get: '/api/admin/orders/get',
+    edit: '/api/admin/orders/edit',
+    update: '/api/admin/orders/update',
+    delete: '/api/admin/orders/delete',
 };
 
 /**
@@ -95,7 +93,7 @@ const forms = {
             api(endpoints.update, formData, forms.update.success, forms.update.fail);
         },
         success: function (data) {
-            grid.item.update(data);
+            table.item.update(data);
             forms.update.hide();
         },
         fail: function (errors) {
@@ -270,30 +268,27 @@ const table = {
 
             Object.keys(data).forEach(data_id => {
                 switch (data_id) {
-                    case 'form':
-                        let form = document.createElement('form');
-                        form.src = data[data_id];
-                        row.append(form);
-                        break;
 
                     case 'buttons':
                         let buttons = data[data_id];
                         Object.keys(buttons).forEach(button_id => {
+                            let td = document.createElement('td');
                             let btn = document.createElement('button');
                             btn.innerHTML = buttons[button_id];
                             btn.className = button_id;
-                            row.append(btn);
+                            td.append(btn);
+                            row.append(td);
                         });
                         break;
 
                     default:
-                        let span = document.createElement('span');
-                        span.innerHTML = data[data_id];
-                        span.className = data_id;
-                        row.append(span);
+                        let td = document.createElement('td');
+                        td.innerHTML = data[data_id];
+                        td.className = data_id;
+                        row.append(td);
                 }
             });
-
+            console.log('build');
             return row;
         },
         /**
@@ -312,9 +307,9 @@ const table = {
          * @param {Object} data
          */
         update: function (data) {
-            let row = grid.getElement().querySelector('.data-item[data-id="' + data.id + '"]');
+            let row = table.getElement().querySelector('.data-item[data-id="' + data.id + '"]');
             row.replaceWith(this.build(data));
-            //row = this.build(data);
+            // row = this.build(data);
         },
         /**
          * Deletes existing row
@@ -365,6 +360,7 @@ const table = {
                     return true;
                 }
 
+
                 return false;
             },
             onClickListener: function (e) {
@@ -385,33 +381,6 @@ const table = {
             fail: function (errors) {
                 alert(errors[0]);
             }
-        },
-        order: {
-            init: function () {
-                if (table.getElement()) {
-                    table.getElement().addEventListener('click', this.onClickListener);
-                    return true;
-                }
-
-                return false;
-            },
-            onClickListener: function (e) {
-                if (e.target.className === 'order') {
-                    let formData = new FormData();
-
-                    let item = e.target.closest('.data-item');
-                    console.log('Order button clicked on', item);
-
-                    formData.append('id', item.getAttribute('data-id'));
-                    api(endpoints.order, formData, grid.buttons.order.success, grid.buttons.order.fail);
-                }
-            },
-            success: function (api_data) {
-                alert('You order was successful!');
-            },
-            fail: function (errors) {
-                alert(errors[0]);
-            }
         }
     }
 };
@@ -428,7 +397,7 @@ const app = {
         });
 
         console.log('Initializing grid...');
-        let success = grid.init();
+        let success = table.init();
         console.log('Grid: Initialization: ' + (success ? 'PASS' : 'FAIL'));
     }
 };

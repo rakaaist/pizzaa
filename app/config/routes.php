@@ -26,4 +26,10 @@ Router::add('api_pizza_edit', '/api/pizza/edit', \App\Controllers\Admin\API\Pizz
 Router::add('api_pizza_update', '/api/pizza/update', \App\Controllers\Admin\API\PizzaApiController::class, 'update');
 Router::add('api_pizza_delete', '/api/pizza/delete', \App\Controllers\Admin\API\PizzaApiController::class, 'delete');
 Router::add('api_pizza_order', '/api/users/order/create', \App\Controllers\User\API\OrdersApiController::class, 'create');
-Router::add('api_orders_table', '/api/admin/orders/get', \App\Controllers\Admin\API\OrdersApiController::class);
+Router::add('api_user_order_get', '/api/users/order/get', \App\Controllers\User\API\OrdersApiController::class);
+
+
+Router::add('api_admin_orders_get', '/api/admin/orders/get', \App\Controllers\Admin\API\OrdersApiController::class);
+Router::add('api_admin_orders_delete', '/api/admin/orders/delete', \App\Controllers\Admin\API\OrdersApiController::class, 'delete');
+Router::add('api_admin_orders_edit', '/api/admin/orders/edit', \App\Controllers\Admin\API\OrdersApiController::class, 'edit');
+Router::add('api_admin_orders_update', '/api/admin/orders/update', \App\Controllers\Admin\API\OrdersApiController::class, 'update');

@@ -11,17 +11,52 @@ use Core\Api\Response;
 
 class OrdersApiController extends AdminController
 {
-    public function index()
+//    public function index()
+//    {
+//        $response = new Response();
+//
+//        $orders = App::$db->getRowsWhere('orders');
+//
+//        foreach ($orders as &$order) {
+//            $order['buttons']['edit'] = 'Edit';
+//        }
+//
+//        $response->setData($orders);
+//
+//        return $response->toJson();
+//    }
+
+    public function index(): string
     {
         $response = new Response();
 
         $orders = App::$db->getRowsWhere('orders');
 
-        foreach ($orders as &$order) {
-            $order['buttons']['edit'] = 'Edit';
+        foreach ($orders as $id => &$row) {
+            $pizza = App::$db->getRowById('pizzas', $row['pizza_id']);
+
+            $timeStamp = date('Y-m-d H:i:s', $row['timestamp']);
+            $difference = abs(strtotime("now") - strtotime($timeStamp));
+            $days = floor($difference / (3600 * 24));
+            $hours = floor($difference / 3600);
+            $minutes = floor(($difference - ($hours * 3600)) / 60);
+            $result = "{$days}d {$hours}:{$minutes} H";
+
+            $row = [
+                'id' => $id,
+                'status' => $row['status'],
+                'name' => $pizza['name'],
+                'timestamp' => $result,
+                'buttons' => [
+                    'edit' => 'Edit'
+                ]
+            ];
         }
 
+        // Setting "what" to json-encode
         $response->setData($orders);
+
+        // Returns json-encoded response
 
         return $response->toJson();
     }
@@ -66,14 +101,27 @@ class OrdersApiController extends AdminController
             $response->appendError('ApiController could not update, since ID is not provided! Check JS!');
         } else {
             $form = new OrderUpdateForm();
+            $row = App::$db->getRowById('orders', $id);
 
             if ($form->validate()) {
-                App::$db->updateRow('orders', $id, $form->values());
+                $row['status'] = $form->value('status');
 
-                $order = $form->values();
-                $order['id'] = $id;
+                App::$db->updateRow('orders', $id, $row);
 
-                $response->setData($order);
+                $timeStamp = date('Y-m-d H:i:s', $row['timestamp']);
+                $difference = abs(strtotime("now") - strtotime($timeStamp));
+                $days = floor($difference / (3600 * 24));
+                $hours = floor($difference / 3600);
+                $minutes = floor(($difference - ($hours * 3600)) / 60);
+                $result = "{$days}d {$hours}:{$minutes} H";
+
+                $row['timestamp'] = $result;
+                $row['id'] = $id;
+                $row['buttons']['edit'] = 'Edit';
+
+                unset($row['email']);
+
+                $response->setData($row);
             } else {
                 $response->setErrors($form->getErrors());
             }
