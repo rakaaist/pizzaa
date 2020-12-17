@@ -93,7 +93,7 @@ const forms = {
             api(endpoints.update, formData, forms.update.success, forms.update.fail);
         },
         success: function (data) {
-            table.item.update(data);
+            table.row.update(data);
             forms.update.hide();
         },
         fail: function (errors) {
