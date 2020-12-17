@@ -135,6 +135,7 @@ const forms = {
 
             Object.keys(data).forEach(data_id => {
                 if (form[data_id]) {
+                    console.log(form[data_id]);
                     const input = form.querySelector('input[name="' + data_id + '"]');
                     if (input) {
                         input.value = data[data_id];
@@ -320,46 +321,15 @@ const table = {
             row.remove();
         }
     },
-    // Buttons are declared on whole grid, not on each item individually, so
+    // Buttons are declared on whole table, not on each item individually, so
     // onClickListeners dont duplicate
     buttons: {
-        delete: {
-            init: function () {
-                if (table.getElement()) {
-                    table.getElement().addEventListener('click', this.onClickListener);
-                    return true;
-                }
-
-                return false;
-            },
-            onClickListener: function (e) {
-                // Listener is set on whole grid, so we listen for which class button
-                // has been pressed
-                if (e.target.className === 'delete') {
-                    let formData = new FormData();
-
-                    // Find container of the button, which has ID
-                    let row = e.target.closest('.data-item');
-                    console.log('Delete button clicked on', row);
-
-                    formData.append('id', row.getAttribute('data-id'));
-                    api(endpoints.delete, formData, table.buttons.delete.success, table.buttons.delete.fail);
-                }
-            },
-            success: function (data) {
-                table.row.delete(data.id);
-            },
-            fail: function (errors) {
-                alert(errors[0]);
-            }
-        },
         edit: {
             init: function () {
                 if (table.getElement()) {
                     table.getElement().addEventListener('click', this.onClickListener);
                     return true;
                 }
-
 
                 return false;
             },
@@ -396,9 +366,9 @@ const app = {
             console.log('Initializing form "' + formId + '": ' + (success ? 'SUCCESS' : 'FAIL'));
         });
 
-        console.log('Initializing grid...');
+        console.log('Initializing table...');
         let success = table.init();
-        console.log('Grid: Initialization: ' + (success ? 'PASS' : 'FAIL'));
+        console.log('Table: Initialization: ' + (success ? 'PASS' : 'FAIL'));
     }
 };
 

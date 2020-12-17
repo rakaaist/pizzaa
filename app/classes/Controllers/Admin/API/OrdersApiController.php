@@ -11,54 +11,61 @@ use Core\Api\Response;
 
 class OrdersApiController extends AdminController
 {
-//    public function index()
-//    {
-//        $response = new Response();
-//
-//        $orders = App::$db->getRowsWhere('orders');
-//
-//        foreach ($orders as &$order) {
-//            $order['buttons']['edit'] = 'Edit';
-//        }
-//
-//        $response->setData($orders);
-//
-//        return $response->toJson();
-//    }
-
     public function index(): string
     {
         $response = new Response();
-
         $orders = App::$db->getRowsWhere('orders');
 
+        $rows = $this->buildRows($orders);
+
+        // Setting "what" to json-encode
+        $response->setData($rows);
+
+        // Returns json-encoded response
+
+        return $response->toJson();
+    }
+
+    private function timeStampResult($row)
+    {
+        $timeStamp = date('Y-m-d H:i:s', $row['timestamp']);
+        $difference = abs(strtotime("now") - strtotime($timeStamp));
+        $days = floor($difference / (3600 * 24));
+        $hours = floor($difference / 3600);
+        $minutes = floor(($difference - ($hours * 3600)) / 60);
+        $seconds = floor($difference % 60);
+
+        if ($days) {
+            $hours = $hours - 24;
+            $result = "{$days}d {$hours}:{$minutes} H";
+        } elseif ($minutes) {
+            $result = "{$minutes} min";
+        } elseif ($hours) {
+            $result = "{$hours}:{$minutes} H";
+        } else {
+            $result = "{$seconds} seconds";
+        }
+
+        return $result;
+    }
+
+    private function buildRows($orders)
+    {
         foreach ($orders as $id => &$row) {
             $pizza = App::$db->getRowById('pizzas', $row['pizza_id']);
-
-            $timeStamp = date('Y-m-d H:i:s', $row['timestamp']);
-            $difference = abs(strtotime("now") - strtotime($timeStamp));
-            $days = floor($difference / (3600 * 24));
-            $hours = floor($difference / 3600);
-            $minutes = floor(($difference - ($hours * 3600)) / 60);
-            $result = "{$days}d {$hours}:{$minutes} H";
 
             $row = [
                 'id' => $id,
                 'status' => $row['status'],
                 'name' => $pizza['name'],
-                'timestamp' => $result,
+                'timestamp' => $this->timeStampResult($row),
                 'buttons' => [
                     'edit' => 'Edit'
                 ]
             ];
         }
 
-        // Setting "what" to json-encode
-        $response->setData($orders);
-
-        // Returns json-encoded response
-
-        return $response->toJson();
+        return $orders;
     }
 
     public function edit(): string
@@ -83,8 +90,23 @@ class OrdersApiController extends AdminController
         return $response->toJson();
     }
 
+    private function buildRow($row, $id)
+    {
+        $pizza = App::$db->getRowById('pizzas', $row['pizza_id']);
+
+        return $row = [
+            'id' => $id,
+            'status' => $row['status'],
+            'name' => $pizza['name'],
+            'timestamp' => $this->timeStampResult($row),
+            'buttons' => [
+                'edit' => 'Edit'
+            ]
+        ];
+    }
+
     /**
-     * Updates pizza data
+     * Updates order data
      * and returns array from which JS generates grid item
      *
      * @return string
@@ -100,26 +122,16 @@ class OrdersApiController extends AdminController
         if ($id === null || $id == 'undefined') {
             $response->appendError('ApiController could not update, since ID is not provided! Check JS!');
         } else {
+
             $form = new OrderUpdateForm();
-            $row = App::$db->getRowById('orders', $id);
+            $order = App::$db->getRowById('orders', $id);
 
             if ($form->validate()) {
-                $row['status'] = $form->value('status');
+                $order['status'] = $form->value('status');
 
-                App::$db->updateRow('orders', $id, $row);
+                App::$db->updateRow('orders', $id, $order);
 
-                $timeStamp = date('Y-m-d H:i:s', $row['timestamp']);
-                $difference = abs(strtotime("now") - strtotime($timeStamp));
-                $days = floor($difference / (3600 * 24));
-                $hours = floor($difference / 3600);
-                $minutes = floor(($difference - ($hours * 3600)) / 60);
-                $result = "{$days}d {$hours}:{$minutes} H";
-
-                $row['timestamp'] = $result;
-                $row['id'] = $id;
-                $row['buttons']['edit'] = 'Edit';
-
-                unset($row['email']);
+                $row = $this->buildRow($order, $id);
 
                 $response->setData($row);
             } else {
@@ -131,24 +143,4 @@ class OrdersApiController extends AdminController
         return $response->toJson();
     }
 
-    public function delete(): string
-    {
-        // This is a helper class to make sure
-        // we use the same API json response structure
-        $response = new Response();
-
-        $id = $_POST['id'] ?? null;
-
-        if ($id === null || $id == 'undefined') {
-            $response->appendError('ApiController could not delete, since ID is not provided! Check JS!');
-        } else {
-            $response->setData([
-                'id' => $id
-            ]);
-            App::$db->deleteRow('orders', $id);
-        }
-
-        // Returns json-encoded response
-        return $response->toJson();
-    }
 }

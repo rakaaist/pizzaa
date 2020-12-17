@@ -1,15 +1,14 @@
 'use strict';
 
 const endpoints = {
-    get: 'api/users/order/get',
-    create: 'api/users/order/create'
+    get: '/api/users/order/get',
 };
 
 /**
  * This defines how JS code selects elements by ID
  */
 const selectors = {
-    table: 'my-order-table'
+    table: 'table'
 }
 
 /**
@@ -46,16 +45,12 @@ function api(url, formData, success, fail) {
  */
 const table = {
     getElement: function () {
-        return document.getElementById(selectors.table);
+        console.log(document.getElementsByClassName(selectors.table)[0]);
+        return document.getElementsByClassName(selectors.table)[0];
     },
     init: function () {
         if (this.getElement()) {
             this.data.load();
-
-            Object.keys(this.buttons).forEach(buttonId => {
-                let success = table.buttons[buttonId].init();
-                console.log('Setting up button listeners "' + buttonId + '": ' + (success ? 'PASS' : 'FAIL'));
-            });
 
             return true;
         }
@@ -101,13 +96,13 @@ const table = {
             }
 
             row.setAttribute('data-id', data.id);
-            row.className = 'data-item';
+            row.className = 'data-row';
 
             Object.keys(data).forEach(data_id => {
-                        let span = document.createElement('span');
-                        span.innerHTML = data[data_id];
-                        span.className = data_id;
-                        row.append(span);
+                        let td = document.createElement('td');
+                        td.innerHTML = data[data_id];
+                        td.className = data_id;
+                        row.append(td);
             });
 
             return row;
@@ -129,15 +124,10 @@ const table = {
  */
 const app = {
     init: function () {
-        // Initialize all forms
-        Object.keys(forms).forEach(formId => {
-            let success = forms[formId].init();
-            console.log('Initializing form "' + formId + '": ' + (success ? 'SUCCESS' : 'FAIL'));
-        });
 
-        console.log('Initializing grid...');
-        let success = grid.init();
-        console.log('Grid: Initialization: ' + (success ? 'PASS' : 'FAIL'));
+        console.log('Initializing table...');
+        let success = table.init();
+        console.log('Table: Initialization: ' + (success ? 'PASS' : 'FAIL'));
     }
 };
 

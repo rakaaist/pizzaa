@@ -10,34 +10,50 @@ use Core\Api\Response;
 
 class OrdersApiController extends UserController
 {
+    private function timeStampResult($row)
+    {
+        $timeStamp = date('Y-m-d H:i:s', $row['timestamp']);
+        $difference = abs(strtotime("now") - strtotime($timeStamp));
+        $days = floor($difference / (3600 * 24));
+        $hours = floor($difference / 3600);
+        $minutes = floor(($difference - ($hours * 3600)) / 60);
+        $seconds = floor($difference % 60);
+
+        if ($days) {
+            $hours = $hours - 24;
+            $result = "{$days}d {$hours}:{$minutes} H";
+        } elseif ($minutes) {
+            $result = "{$minutes} min";
+        } elseif ($hours) {
+            $result = "{$hours}:{$minutes} H";
+        } else {
+            $result = "{$seconds} seconds";
+        }
+
+        return $result;
+    }
+
     public function index()
     {
         $response = new Response();
 
         $orders = App::$db->getRowsWhere('orders', ['email' => App::$session->getUser()['email']]);
 
+        foreach ($orders as $id => &$row) {
+
+            $row = [
+                'id' => $id,
+                'name' => $row['pizza_name'],
+                'timestamp' => $this->timeStampResult($row),
+                'status' => $row['status']
+            ];
+        }
+
         $response->setData($orders);
 
         return $response->toJson();
     }
 
-
-//    public function create(): string
-//    {
-//        // This is a helper class to make sure
-//        // we use the same API json response structure
-//        $response = new Response();
-//        $form = new OrderCreateForm();
-//
-//        if ($form->validate()) {
-//            App::$db->insertRow('orders', $form->values());
-//        } else {
-//            $response->setErrors($form->getErrors());
-//        }
-//
-//        // Returns json-encoded response
-//        return $response->toJson();
-//    }
 
     public function create(): string
     {
@@ -58,9 +74,9 @@ class OrdersApiController extends UserController
 
             App::$db->insertRow('orders', [
                 'pizza_id' => $id,
-//                'user name' => $user['user_name'],
+                'user_name' => $user['user_name'],
                 'status' => 'active',
-                'pizza name' => $pizza['name'],
+                'pizza_name' => $pizza['name'],
                 'timestamp' => time(),
                 'email' => $user['email']
             ]);
