@@ -6,6 +6,7 @@ use App\App;
 use App\Controllers\Base\AdminController;
 use App\Views\BasePage;
 use App\Views\Forms\Admin\User\UserRoleForm;
+use App\Views\Forms\Admin\User\UserUpdateForm;
 use App\Views\Tables\Admin\UsersTable;
 
 /**
@@ -24,25 +25,19 @@ class UsersController extends AdminController
     {
         parent::__construct();
         $this->page = new BasePage([
-            'title' => 'Users'
+            'title' => 'Users',
+            'js' => ['/media/js/admin/users.js']
         ]);
-        $this->form = new UserRoleForm();
     }
 
-    public function index()
+     public function index()
     {
-        if ($this->form->validate()) {
-            $id = $this->form->value('row_id');
+        $forms = [
+            'update' => (new UserUpdateForm())->render()
+        ];
 
-            $user = App::$db->getRowById('users', $id);
-            $user['role'] = $this->form->value('role');
-
-            App::$db->updateRow('users', $id, $user);
-        }
-
-        $table = new UsersTable();
+        $table = new UsersTable($forms);
         $this->page->setContent($table->render());
-
         return $this->page->render();
     }
 }

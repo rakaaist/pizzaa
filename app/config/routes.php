@@ -33,3 +33,7 @@ Router::add('api_admin_orders_get', '/api/admin/orders/get', \App\Controllers\Ad
 Router::add('api_admin_orders_delete', '/api/admin/orders/delete', \App\Controllers\Admin\API\OrdersApiController::class, 'delete');
 Router::add('api_admin_orders_edit', '/api/admin/orders/edit', \App\Controllers\Admin\API\OrdersApiController::class, 'edit');
 Router::add('api_admin_orders_update', '/api/admin/orders/update', \App\Controllers\Admin\API\OrdersApiController::class, 'update');
+
+Router::add('api_admin_users_get', '/api/admin/users/get', \App\Controllers\Admin\API\UsersApiController::class);
+Router::add('api_admin_users_edit', '/api/admin/users/edit', \App\Controllers\Admin\API\UsersApiController::class, 'edit');
+Router::add('api_admin_users_update', '/api/admin/users/update', \App\Controllers\Admin\API\UsersApiController::class, 'update');

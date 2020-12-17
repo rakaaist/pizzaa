@@ -75,21 +75,22 @@ function button_attr(string $button_id, array $button): string
 function select_attr(string $field_id, array $field): string
 {
     $attributes = [
-            'name' => $field_id,
-            'value' => $field['value'],
+            'name' => $field_id
         ] + ($field['extra']['attr'] ?? []);
 
     return html_attr($attributes);
 }
 
-function option_attr(string $option_id, array $option): string
+function option_attr(string $option_id, array $field): string
 {
     $attributes = [
         'value' => $option_id,
     ];
 
-    if ($option['value'] === $option_id) {
-        $attributes['selected'] = 'selected';
+    if (isset($field['value'])){
+        if ($field['value'] === $option_id) {
+            $attributes['selected'] = 'selected';
+        }
     }
 
     return html_attr($attributes);

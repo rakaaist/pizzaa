@@ -16,22 +16,3 @@
 <!--    --><?php //endforeach; ?>
 
 </table>
-
-
-<!--<div id="order-table">-->
-<!--    <table>-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--            <th>Id</th>-->
-<!--            <th>User Name</th>-->
-<!--            <th>Pizza Name</th>-->
-<!--            <th>Tme ago</th>-->
-<!--            <th>Status</th>-->
-<!--            <th>Actions</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--                Rows are dynamically populated-->
-<!--        </tbody>-->
-<!--    </table>-->
-<!--</div>-->
