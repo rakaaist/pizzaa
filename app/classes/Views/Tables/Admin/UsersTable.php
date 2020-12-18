@@ -2,8 +2,6 @@
 
 namespace App\Views\Tables\Admin;
 
-use App\App;
-use App\Views\Forms\Admin\User\UserRoleForm;
 use Core\Views\Table;
 
 class UsersTable extends Table
