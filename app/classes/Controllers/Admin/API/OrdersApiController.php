@@ -36,14 +36,14 @@ class OrdersApiController extends AdminController
         $seconds = floor($difference % 60);
 
         if ($days) {
-            $hours = $hours - 24;
-            $result = "{$days}d {$hours}:{$minutes} H";
+            $hours = $hours - 24 * $days;
+            $result = "{$days}d {$hours}h {$minutes}min";
         } elseif ($minutes) {
-            $result = "{$minutes} min";
+            $result = "{$minutes}min";
         } elseif ($hours) {
-            $result = "{$hours}:{$minutes} H";
+            $result = "{$hours}h {$minutes}min";
         } else {
-            $result = "{$seconds} seconds";
+            $result = "{$seconds}seconds";
         }
 
         return $result;
